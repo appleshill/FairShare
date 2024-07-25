@@ -36,3 +36,163 @@
     transform: rotate(360deg);
   }
 }
+
+/* Define basic colors and fonts */
+:root {
+  --background-color: #121212; /* Dark background */
+  --primary-color: #BB86FC; /* Purple accent */
+  --text-color: #E0E0E0; /* Light grey for text */
+  --font-family: 'Roboto', sans-serif; /* Material Design default */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Full viewport height */
+  text-align: center;
+  padding: 20px;
+}
+
+.login-container h1, .login-container h2 {
+  margin: 0 0 20px 0; /* Spacing between elements */
+}
+
+.login-container h1 {
+  font-size: 2.5em; /* Larger text for main title */
+  color: #FFFFFF; /* Brighter white for emphasis */
+}
+
+.login-container h2 {
+  font-size: 1.5em; /* Smaller text for secondary title */
+  color: var(--text-color);
+  max-width: 90%; /* Ensures text is not too wide on larger screens */
+}
+
+.Login button {
+  background-color: var(--primary-color);
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  cursor: pointer;
+  border-radius: 20px; /* Rounded edges */
+  transition: background-color 0.3s;
+  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+}
+
+.Login button:hover {
+  background-color: #9e77c9; /* Darker shade of the accent color */
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 600px) {
+  .login-container h1 {
+      font-size: 1.8em; /* Slightly smaller to fit mobile screens */
+  }
+
+  .login-container h2 {
+      font-size: 1.2em;
+  }
+
+  .Login button {
+      padding: 10px 20px;
+      font-size: 1em;
+  }
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Full viewport height, centers the profile vertically */
+  text-align: center;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%; /* Makes the image circular */
+  object-fit: cover; /* Ensures the image covers the space without being distorted */
+  border: 3px solid var(--primary-color); /* Optional: adds a styled border around the image */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.profile-name {
+  font-size: 1.8em; /* Large font size for name */
+  color: #FFFFFF; /* Bright white color for emphasis */
+  margin-top: 20px; /* Space between the image and the name */
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Subtle text shadow for better readability */
+}
+
+/* Adjustments for mobile screens */
+@media (max-width: 600px) {
+  .profile-image {
+      width: 120px;
+      height: 120px; /* Slightly smaller to fit mobile screens */
+  }
+
+  .profile-name {
+      font-size: 1.5em;
+  }
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.form-input, .custom-file-input, button {
+  margin: 10px 0;
+  padding: 8px 12px;
+  width: 80%;
+  max-width: 300px;
+  border-radius: 4px;
+  border: 1px solid var(--primary-color);
+}
+
+.form-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+button, .custom-file-input {
+  background-color: var(--primary-color);
+  color: #000;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+button:hover, .custom-file-input:hover {
+  background-color: #9e77c9;
+}
+
+.custom-file-input {
+  cursor: pointer;
+}
+
+input[type="file"] {
+  display: none; /* Hide the default file input */
+}
+

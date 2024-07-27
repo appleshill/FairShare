@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import NewUserProfileForm from './NewUserProfileForm';
-import ProfilePage from './profilePage';
 
-const ProfileSetup = () => {
+const ProfileExistsCheck = () => {
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkUserData = async () => {
@@ -13,25 +13,26 @@ const ProfileSetup = () => {
             const docSnap = await getDoc(userDoc);
 
             if (docSnap.exists()) {
-                setUserData(docSnap.data());
+                setUserData(docSnap.data()); // Data exists, navigate to home page
+                navigate('/home');
             } else {
-                // No user data found, prompt for new user data
+                
                 setUserData({ newUser: true });
+                navigate('/new-user-profile-form'); // Navigate to the profile setup form
             }
         };
 
         if (auth.currentUser) {
             checkUserData();
         }
-    }, []);
+    }, [navigate]);
 
     if (!userData) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>; 
     }
 
-    return (
-        userData.newUser ? <NewUserProfileForm /> : <ProfilePage />
-    );
+    return null;
 };
 
-export default ProfileSetup;
+export default ProfileExistsCheck;
+

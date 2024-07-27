@@ -110,39 +110,10 @@ body {
   }
 }
 
-.profile-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh; /* Full viewport height, centers the profile vertically */
-  text-align: center;
-  padding: 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
-
-.profile-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%; /* Makes the image circular */
-  object-fit: cover; /* Ensures the image covers the space without being distorted */
-  border: 3px solid var(--primary-color); /* Optional: adds a styled border around the image */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
-}
-
-.profile-name {
-  font-size: 1.8em; /* Large font size for name */
-  color: #FFFFFF; /* Bright white color for emphasis */
-  margin-top: 20px; /* Space between the image and the name */
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Subtle text shadow for better readability */
-}
-
-/* Adjustments for mobile screens */
 @media (max-width: 600px) {
   .profile-image {
-      width: 120px;
-      height: 120px; /* Slightly smaller to fit mobile screens */
+      width: 50px;
+      height: 50px; 
   }
 
   .profile-name {
@@ -194,5 +165,206 @@ button:hover, .custom-file-input:hover {
 
 input[type="file"] {
   display: none; /* Hide the default file input */
+}
+
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: auto;
+  max-width: 90%;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.header-container {
+  width: 100%; /* Full width to use the top space */
+  display: flex;
+  justify-content: flex-end; /* Aligns items to the right */
+  align-items: center;
+  padding: 10px 20px; /* Padding for breathing space */
+}
+
+.profile-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 20px; /* Space between name and image */
+  border: 3px solid var(--primary-color);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.profile-name {
+  font-size: 1.8em;
+  color: #FFFFFF;
+  text-align: right; /* Aligns the text to the right */
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+.groups-section {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #333;
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.groups-section h2 {
+  color: #BB86FC;
+  margin-left: 20px; /* Aligns 'Groups' title to the left */
+}
+
+.groups-section ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.groups-section li {
+  padding: 8px;
+  border-bottom: 1px solid #444;
+}
+
+@media (min-width: 768px) {
+  .header-container {
+      flex-direction: row;
+      justify-content: space-between; /* Adjusts for larger screens */
+  }
+
+  .profile-image {
+      width: 90px; /* Larger for larger screens */
+      height: 90px;
+  }
+
+  .profile-name {
+      font-size: 2em;
+  }
+}
+
+.error {
+  color: red;
+  margin: 10px 0;
+}
+
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab-button {
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;   
+  height: 50px;  
+  text-align: center;
+  line-height: 50px; 
+}
+
+.fab-options {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fab-options button {
+  background-color: #666;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.group-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--text-color); /* Ensuring text color consistency */
+}
+
+.group-details {
+  background-color: #282c34; /* Dark background similar to .App-header */
+  color: var(--text-color); /* Light gray text for readability */
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Subtle shadow for depth */
+  display: flex; /* Enables flexbox layout */
+  flex-direction: column; /* Stacks children vertically */
+  align-items: center; /* Centers children horizontally */
+  justify-content: center; /* Centers children vertically if needed */
+}
+
+.group-details p {
+  margin: 10px 0;
+  font-size: 1.2em; /* Slightly larger font size for better readability */
+}
+
+.copy-icon {
+  width: 1.5em; /* Adjust width as needed */
+  height: 1.5em; /* Adjust height as needed */
+  vertical-align: middle; /* Aligns the icon better with any text or baseline */
+}
+
+.group-details button {
+  background-color: var(--primary-color); /* Purple accent for the button */
+  border: none;
+  color: #000;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 1em;
+  border-radius: 20px; /* Rounded edges */
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.group-details button:hover {
+  background-color: #9e77c9; /* Darker shade of the accent color */
+}
+
+.home-button {
+  background-color: var(--primary-color);
+  border: none;
+  color: #000;
+  cursor: pointer;
+  padding: 12px 24px;
+  font-size: 1em;
+  font-family: var(--font-family);
+  border-radius: 20px;
+  transition: background-color 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px; 
+}
+
+.home-button:hover {
+  background-color: #9e77c9;
 }
 

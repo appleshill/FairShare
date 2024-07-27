@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
@@ -7,6 +8,7 @@ const NewUserProfileForm = () => {
     const [name, setName] = useState('');
     const [file, setFile] = useState(null);
     const [profilePicUrl, setProfilePicUrl] = useState('https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg');
+    const navigate = useNavigate();
 
     const handleFileChange = event => {
         const selectedFile = event.target.files[0];
@@ -15,7 +17,7 @@ const NewUserProfileForm = () => {
 
             const reader = new FileReader();
             reader.onload = (e) => {
-                setProfilePicUrl(e.target.result); // Display the selected image as profile pic
+                setProfilePicUrl(e.target.result);
             };
             reader.readAsDataURL(selectedFile);
         }
@@ -32,7 +34,8 @@ const NewUserProfileForm = () => {
         }
 
         const userDoc = doc(db, "Users", auth.currentUser.uid);
-        await setDoc(userDoc, { name, profilePicture: imageUrl });
+        await setDoc(userDoc, { name, profilePicture: imageUrl, groups: [] });
+        navigate('/home');
     };
 
     return (

@@ -22,6 +22,7 @@ function App() {
             <Route path="/new-user-profile-form" element={user ? <NewUserProfileForm /> : <Navigate to="/" />} />
             <Route path="/home" element={user ? <HomePage /> : <Navigate to="/" />} />
             <Route path="*" element={<FrontPage />} /> 
+            <Route path="/frontPage" element={<FrontPage />} />
             <Route path="/create-group" element={<CreateGroup />} />
           </Routes>
       </div>

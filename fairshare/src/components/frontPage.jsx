@@ -22,7 +22,7 @@ export const FrontPage = () => {
     if (!user) {
         return (
             <div className="login-container">
-                <h1>Welcome to SplitDumb!</h1>
+                <h1>Welcome to FairShare!</h1>
                 <h2>To continue, sign in with your Google Account</h2>
                 <div className="Login">
                     <button onClick={signIn}>Sign In with Google</button>

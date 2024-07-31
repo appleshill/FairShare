@@ -4,14 +4,14 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDv8hpZGKGllJrk4Mszz8LfLhEOe88tRwY",
-    authDomain: "splitdumb-4ce22.firebaseapp.com",
-    projectId: "splitdumb-4ce22",
-    storageBucket: "splitdumb-4ce22.appspot.com",
-    messagingSenderId: "1027055263565",
-    appId: "1:1027055263565:web:3766adb5efa15a535c6104",
-    measurementId: "G-ZVGYD8VEDC"
-  };
+  apiKey: "AIzaSyB2Js0KZzzQf-WxH_oImMnbrK_sX5u3cbQ",
+  authDomain: "fairshare-afe2a.firebaseapp.com",
+  projectId: "fairshare-afe2a",
+  storageBucket: "fairshare-afe2a.appspot.com",
+  messagingSenderId: "495649052058",
+  appId: "1:495649052058:web:3cf3b5a25515fcdeefd623",
+  measurementId: "G-26027T8NYP"
+};
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

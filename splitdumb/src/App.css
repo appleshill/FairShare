@@ -37,12 +37,12 @@
   }
 }
 
-/* Define basic colors and fonts */
+
 :root {
-  --background-color: #121212; /* Dark background */
-  --primary-color: #BB86FC; /* Purple accent */
-  --text-color: #E0E0E0; /* Light grey for text */
-  --font-family: 'Roboto', sans-serif; /* Material Design default */
+  --background-color: #121212; 
+  --primary-color: #BB86FC; 
+  --text-color: #E0E0E0; 
+  --font-family: 'Roboto', sans-serif; 
 }
 
 body {
@@ -50,7 +50,7 @@ body {
   font-family: var(--font-family);
   background-color: var(--background-color);
   color: var(--text-color);
-  overflow-x: hidden; /* Prevents horizontal scroll */
+  overflow-x: hidden; 
 }
 
 .login-container {
@@ -58,24 +58,24 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Full viewport height */
+  min-height: 100vh; 
   text-align: center;
   padding: 20px;
 }
 
 .login-container h1, .login-container h2 {
-  margin: 0 0 20px 0; /* Spacing between elements */
+  margin: 0 0 20px 0; 
 }
 
 .login-container h1 {
-  font-size: 2.5em; /* Larger text for main title */
-  color: #FFFFFF; /* Brighter white for emphasis */
+  font-size: 2.5em; 
+  color: #FFFFFF; 
 }
 
 .login-container h2 {
-  font-size: 1.5em; /* Smaller text for secondary title */
+  font-size: 1.5em; 
   color: var(--text-color);
-  max-width: 90%; /* Ensures text is not too wide on larger screens */
+  max-width: 90%; 
 }
 
 .Login button {
@@ -85,19 +85,19 @@ body {
   padding: 12px 24px;
   font-size: 1.1em;
   cursor: pointer;
-  border-radius: 20px; /* Rounded edges */
+  border-radius: 20px; 
   transition: background-color 0.3s;
-  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2); /* Adds shadow for depth */
+  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2); 
 }
 
 .Login button:hover {
-  background-color: #9e77c9; /* Darker shade of the accent color */
+  background-color: #9e77c9; 
 }
 
-/* Responsive design for mobile devices */
+
 @media (max-width: 600px) {
   .login-container h1 {
-      font-size: 1.8em; /* Slightly smaller to fit mobile screens */
+      font-size: 1.8em; 
   }
 
   .login-container h2 {
@@ -133,8 +133,8 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #333;
+  color: #a69de9;
 }
 
 .form-input, .custom-file-input, button {
@@ -170,7 +170,7 @@ button:hover, .custom-file-input:hover {
 }
 
 input[type="file"] {
-  display: none; /* Hide the default file input */
+  display: none; 
 }
 
 
@@ -184,15 +184,15 @@ input[type="file"] {
   max-width: 90%;
   background-color: var(--background-color);
   color: var(--text-color);
-  width: 100%; /* Ensure the container takes full width */
+  width: 100%; 
 }
 
 .header-container {
-  width: 100%; /* Full width to use the top space */
+  width: 100%; 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Padding for breathing space */
+  padding: 10px 20px; 
 }
 
 .groups-section {
@@ -207,7 +207,7 @@ input[type="file"] {
 
 .groups-section h2 {
   color: #BB86FC;
-  margin-left: 20px; /* Aligns 'Groups' title to the left */
+  margin-left: 20px; 
 }
 
 .groups-section ul {
@@ -231,11 +231,11 @@ input[type="file"] {
 @media (min-width: 768px) {
   .header-container {
       flex-direction: row;
-      justify-content: space-between; /* Adjusts for larger screens */
+      justify-content: space-between; 
   }
 
   .profile-image {
-      width: 90px; /* Larger for larger screens */
+      width: 90px; 
       height: 90px;
   }
 
@@ -297,42 +297,42 @@ input[type="file"] {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  color: var(--text-color); /* Ensuring text color consistency */
+  color: var(--text-color); 
 }
 
 .group-details {
-  background-color: #282c34; /* Dark background similar to .App-header */
-  color: var(--text-color); /* Light gray text for readability */
+  background-color: #282c34; 
+  color: var(--text-color); 
   padding: 15px;
   border-radius: 8px;
   margin-top: 20px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Subtle shadow for depth */
-  display: flex; /* Enables flexbox layout */
-  flex-direction: column; /* Stacks children vertically */
-  align-items: center; /* Centers children horizontally */
-  justify-content: center; /* Centers children vertically if needed */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5); 
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
 }
 
 .group-details p {
   margin: 10px 0;
-  font-size: 1.2em; /* Slightly larger font size for better readability */
+  font-size: 1.2em; 
 }
 
 .copy-icon {
-  width: 1.5em; /* Adjust width as needed */
-  height: 1.5em; /* Adjust height as needed */
-  vertical-align: middle; /* Aligns the icon better with any text or baseline */
+  width: 1.5em; 
+  height: 1.5em; 
+  vertical-align: middle; 
 }
 
 .group-details button {
-  background-color: var(--primary-color); /* Purple accent for the button */
+  background-color: var(--primary-color); 
   border: none;
   color: #000;
   cursor: pointer;
   padding: 8px 16px;
   font-size: 1em;
-  border-radius: 20px; /* Rounded edges */
+  border-radius: 20px; 
   transition: background-color 0.3s;
   display: flex;
   align-items: center;
@@ -340,7 +340,7 @@ input[type="file"] {
 }
 
 .group-details button:hover {
-  background-color: #9e77c9; /* Darker shade of the accent color */
+  background-color: #9e77c9; 
 }
 
 .home-button {
@@ -386,7 +386,7 @@ input[type="file"] {
 .profile-name {
   font-size: 1.8em;
   color: #FFFFFF;
-  text-align: left; /* Aligns the text to the right */
+  text-align: left; 
   text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
   padding-right: 100px;
   flex-grow: 1;
@@ -425,4 +425,150 @@ input[type="file"] {
   cursor: pointer;
   width: 100%;  
   /* position: fixed; */
+}
+
+.edit-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.edit-profile-image {
+  width: 200px;  
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;  
+  margin-bottom: 20px; 
+}
+
+.profile-picture-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;  
+  max-width: 360px; 
+  padding: 20px;
+  background: #282c34; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+  margin-top: 20px; 
+}
+
+.remove-picture-button {
+  position: absolute;
+  top: -20px;  
+  right: -10px; 
+  background-color: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px; 
+  cursor: pointer;
+  padding: 0; 
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); 
+  outline: none; 
+  z-index: 1; 
+}
+
+.remove-picture-button:hover {
+  background-color: #ad89d4;
+}
+
+/* .file-input-label {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+} */
+.file-input-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 15px;  
+  margin-bottom: 10px;
+  border-radius: 5px; 
+  cursor: pointer;
+  width: 80%;         
+  max-width: 300px;   
+  font-size: 1em;    
+  text-align: center; 
+  transition: background-color 0.3s; 
+}
+
+.file-input-label:hover {
+  background-color: #9e77c9; 
+}
+
+.edit-input, .file-input-label, .submit-profile-button {
+  width: 80%;
+  max-width: 300px;
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--primary-color);
+}
+
+.edit-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+/* .submit-profile-button {
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  margin-top: 20px; 
+  padding: 10px 15px;
+  border-radius: 5px;
+} */
+
+.submit-profile-button {
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 10px;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 315px;
+  height: 38px;
+  transition: background-color 0.3s; 
+  font-size: 16px;
+}
+
+.submit-profile-button:hover {
+  background-color: #9e77c9; 
+}
+
+.form-container input[type="text"],
+.form-container input[type="groupCode"],
+.form-container textarea {
+  background-color: #222; 
+  color: #fff; 
+  border: 1px solid #555; 
+  padding: 10px;
+  border-radius: 4px; 
+  width: 100%; 
+  box-sizing: border-box; 
 }

@@ -32,5 +32,5 @@ export const FrontPage = () => {
         );
     }
 
-    return null; // Return null if the user is authenticated
+    return null; 
 };

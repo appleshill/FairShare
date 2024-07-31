@@ -9,6 +9,8 @@ import ProfileExistsCheck from './components/profileExistsCheck';
 import HomePage from './components/homePage';
 import NewUserProfileForm from './components/NewUserProfileForm';
 import CreateGroup from './components/createGroup';
+import EditProfile from './components/editProfile';
+import JoinGroup from './components/joinGroup';
 
 function App() {
   const [user] = useAuthState(auth);
@@ -24,6 +26,8 @@ function App() {
             <Route path="*" element={<FrontPage />} /> 
             <Route path="/frontPage" element={<FrontPage />} />
             <Route path="/create-group" element={<CreateGroup />} />
+            <Route path="/edit-profile" element={<EditProfile />} />
+            <Route path="/join-group" element={<JoinGroup />} />
           </Routes>
       </div>
     </Router>

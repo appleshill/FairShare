@@ -16,7 +16,7 @@ const animals = ["Dog", "Cat", "Elephant", "Lion", "Tiger", "Giraffe", "Bear",
 const numbers = ['1','2','3','4','5','6','7','8','9','0','11','22','33','44','55','66','77','88','99','00'];
  // 318600 possibilities
 
- export const GeneratePassword = () => {
+ export const GenerateCode = () => {
   const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
   const color = colours[Math.floor(Math.random() * colours.length)];
   const animal = animals[Math.floor(Math.random() * animals.length)];

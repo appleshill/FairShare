@@ -46,6 +46,10 @@ const HomePage = () => {
         }, []
     );
 
+    const editProfile = () => {
+        navigate('/edit-profile');
+    }
+
     if (!userProfile) {
         return <div className = "profile-container"> Loading User Profile...</div>;
     }
@@ -59,7 +63,7 @@ const HomePage = () => {
                     </button>
                     {profileExpanded && (
                         <div className = 'profile-image-expanded'>
-                            <button onClick={() => console.log('Profile edit functionality coming soon')}>Edit Profile</button>
+                            <button onClick={() => editProfile()}>Edit Profile</button>
                             <button onClick={() => signOut()}>Sign Out</button>
                         </div>
                     )}
@@ -78,13 +82,13 @@ const HomePage = () => {
                     )}
             </div>
             <div className="fab-container" onClick={() => setIsExpanded(!isExpanded)}>
-                <button className="fab-button">+</button>
                 {isExpanded && (
                     <div className="fab-options">
                         <button onClick={() => navigate('/create-group')}>Create Group</button>
-                        <button onClick={() => console.log('Join Group functionality coming soon')}>Join Group</button> {/* do this */}
+                        <button onClick={() => navigate('/join-group')}>Join Group</button> 
                     </div>
                 )}
+                <button className="fab-button">+</button>
             </div>
         </div>
     );

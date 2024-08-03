@@ -217,9 +217,17 @@ input[type="file"] {
 }
 
 .groups-section li {
-  padding: 8px;
-  border-bottom: 1px solid #444;
+  padding: 10px;
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
 }
+
+.groups-section li:hover {
+  background-color: #555; 
+}
+
 
 @media (max-width: 600px) {
   .groups-section {
@@ -250,12 +258,13 @@ input[type="file"] {
 }
 
 .fab-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
+  position: absolute;
+  bottom: 30px;
+  right: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 1000;
 }
 
 .fab-button {
@@ -273,22 +282,29 @@ input[type="file"] {
   height: 50px;  
   text-align: center;
   line-height: 50px; 
+  z-index: 2;
 }
 
 .fab-options {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
+  position: absolute;
+  width: 130px;
 }
 
+.fab-container:hover .fab-options,
+.fab-container:focus-within .fab-options {
+  opacity: 1;
+  transform: translateY(-130px);  
+} 
+
 .fab-options button {
-  background-color: #666;
+  /* background-color: #666; */
   border: none;
-  color: white;
+  /* color: white; */
   padding: 10px 20px;
   margin: 5px 0;
   cursor: pointer;
   border-radius: 5px;
+  width: 100%;
 }
 
 .group-info-container {
@@ -395,7 +411,7 @@ input[type="file"] {
 .profile-fab-container {
   position: fixed;
   top: 30px;
-  right: 40px;
+  right: 50px;
   display: flex;
   flex-direction: column;
   align-items: center; 
@@ -491,14 +507,7 @@ input[type="file"] {
   background-color: #ad89d4;
 }
 
-/* .file-input-label {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-} */
+
 .file-input-label {
   display: inline-flex;
   align-items: center;
@@ -572,3 +581,208 @@ input[type="file"] {
   width: 100%; 
   box-sizing: border-box; 
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-evenly; 
+  align-items: center;
+  padding: 10px;
+  background-color: #282c34;
+  border-radius: 8px;
+  margin: 20px auto; 
+  width: 80%; 
+}
+
+.group-button {
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.group-button:hover {
+  background-color: #9e77c9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+
+.home-icon-button {
+  position: fixed;
+  top: 30px;
+  left: 50px;
+  border: none;
+  cursor: pointer;
+  padding: 0px;
+  max-width: 50px; 
+  max-height: 50px;
+  transition: background-color 0.3s, transform 0.3s; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  background: white;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.home-icon-button img {
+  filter: invert(100%); 
+  transition: filter 0.3s;
+  width: 100%;
+  height: 100%;
+}
+
+.home-icon-button:hover {
+  background-color: #447903; 
+}
+
+
+.profile-name-in-menu {
+  font-size: 1.5em; 
+  color: white; 
+  margin-bottom: 15px; 
+}
+
+.group-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  padding: 20px;
+  background-color: #282c34; 
+  border-radius: 8px;
+  margin-top: 40px; 
+}
+
+.group-name {
+  font-size: 2em; 
+  color: var(--primary-color); 
+  margin-bottom: 10px; 
+}
+
+.group-icon {
+  width: 150px; 
+  height: 150px; 
+  border-radius: 50%; 
+  object-fit: cover; 
+}
+
+
+.expenses-section {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #333; 
+  border-radius: 8px;
+  max-height: 600px; 
+  overflow-y: auto; 
+}
+
+.expenses-section h2 {
+  color: #BB86FC; 
+  margin-left: 20px; 
+}
+
+.expenses-section ul {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.expenses-section li {
+  padding: 8px;
+  border-bottom: 1px solid #444; 
+}
+
+
+
+
+@media (max-width: 768px) {
+  .profile-name, .profile-name-in-menu {
+    font-size: 1.2em; 
+  }
+
+  .profile-image-expanded {
+    top: 100%;
+    right: 0;
+    z-index: 10; 
+  }
+
+  .group-name {
+    font-size: 1.5em; 
+  }
+
+  .group-icon, .profile-image {
+    width: 100px; 
+    height: 100px;
+  }
+
+  .profile-image-expanded {
+    max-width: 80px;
+    right: 0px;
+  }
+
+  .home-icon-button{
+    width: 40px; 
+    height: 40px; 
+    padding: 5px; 
+  }
+
+  .profile-image-button {
+    width: 50px;
+    height: 50px;
+    right: 30px;
+  }
+
+  .button-container {
+    flex-direction: column; 
+    width: 90%; 
+  }
+
+  .group-button {
+    flex: 1 0 45%; 
+    margin: 5px; 
+    font-size: 0.9em; 
+  }
+
+  .profile-fab-container {
+    right: 30px; 
+  }
+
+  .profile-image {
+    width: 100%;  
+    height: 100%; 
+  }
+
+  .fab-container {
+    bottom: 30px; 
+    right: 30px;
+  }
+  
+  .fab-button {
+    width: 60px;
+    height: 60px;
+  }
+
+  .fab-options {
+    top: 50px;
+  }
+  
+  .fab-options button {
+    padding: 12px 15px; 
+    font-size: 0.9em; 
+    top: 50px;
+    margin: 2px 0;
+  }
+  
+  
+  *, *:before, *:after {
+    transition: all 0.3s ease;
+  }
+
+  .expenses-section, .groups-section {
+    padding: 10px; 
+    max-height: 300px; 
+  }
+}
+

@@ -11,6 +11,7 @@ import NewUserProfileForm from './components/NewUserProfileForm';
 import CreateGroup from './components/createGroup';
 import EditProfile from './components/editProfile';
 import JoinGroup from './components/joinGroup';
+import MainGroupPage from './components/mainGroupPage';
 
 function App() {
   const [user] = useAuthState(auth);
@@ -28,6 +29,7 @@ function App() {
             <Route path="/create-group" element={<CreateGroup />} />
             <Route path="/edit-profile" element={<EditProfile />} />
             <Route path="/join-group" element={<JoinGroup />} />
+            <Route path="/group/:groupName" element={<MainGroupPage />} />
           </Routes>
       </div>
     </Router>

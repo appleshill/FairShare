@@ -27,6 +27,10 @@ const HomePage = () => {
         setProfileExpanded(prev => !prev);
     }
 
+    const handleGroupClick = groupName => {
+        navigate(`/group/${groupName}`);
+    };
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             const userDoc = doc(db, "Users", auth.currentUser.uid);
@@ -71,15 +75,17 @@ const HomePage = () => {
             </div>
             <div className="groups-section">
                 <h2>Groups</h2>
-                    {userGroups.length > 0 ? (
-                        <ul>
-                            {userGroups.map((group, index) => (
-                                <li key={index}>{group}</li> // Display each group name
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No groups joined yet.</p>
-                    )}
+                {userGroups.length > 0 ? (
+                    <ul>
+                        {userGroups.map((group, index) => (
+                            <li key={index} onClick={() => handleGroupClick(group)}>
+                                {group}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No groups joined yet.</p>
+                )}
             </div>
             <div className="fab-container" onClick={() => setIsExpanded(!isExpanded)}>
                 {isExpanded && (

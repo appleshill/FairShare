@@ -86,11 +86,6 @@ const MainGroupPage = () => {
         console.log('Totatls button pressed');
     }
 
-    const members = () => {
-        //change this when available
-        console.log('Members button pressed');
-    }
-
     const settings = () => {
         // change this when available
         console.log('Settings button pressed');
@@ -132,7 +127,7 @@ const MainGroupPage = () => {
             <div className="button-container">
                 <button onClick={balances} className="group-button">Balances</button>
                 <button onClick={totals} className="group-button">Totals</button>
-                <button onClick={members} className="group-button">Members</button>
+                <button onClick={() => navigate(`/group/${groupName}/members`)} className="group-button">Members</button>
                 <button onClick={settings} className="group-button">Settings</button>
             </div>
             <div className="expenses-section">
@@ -150,7 +145,7 @@ const MainGroupPage = () => {
             <div className="fab-container" onClick={() => setIsExpanded(!isExpanded)}>
                 {isExpanded && (
                     <div className="fab-options">
-                        <button onClick={() => console.log('Create an expense') /* update this*/}>Create Group</button>
+                        <button onClick={() => navigate(`/group/${groupName}/create-expense`)}>Create Expense</button>
                     </div>
                 )}
                 <button className="fab-button">+</button>

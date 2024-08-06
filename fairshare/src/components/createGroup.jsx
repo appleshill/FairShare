@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db, storage } from '../firebase';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
@@ -12,7 +12,25 @@ const CreateGroup = () => {
     const [error, setError] = useState('');
     const [groupCode, setGroupCode] = useState(null);
     const [groupCreated, setGroupCreated] = useState(false);
+    const [userProfile, setUserProfile] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const userDoc = doc(db, "Users", auth.currentUser.uid);
+            const docSnap = await getDoc(userDoc);
+
+            if (docSnap.exists()) {
+                setUserProfile(docSnap.data());
+            }
+        };
+
+        if (auth.currentUser) {
+            fetchUserProfile();
+        }
+
+        }, []
+    );
 
     const handleFileChange = event => {
         const selectedFile = event.target.files[0];
@@ -48,6 +66,7 @@ const CreateGroup = () => {
             groupPicture: imageUrl,
             members: [auth.currentUser.uid], 
             groupCode: generatedCode, 
+            membersNames: [userProfile.name],
         });
         const userDocRef = doc(db, "Users", auth.currentUser.uid);
         await updateDoc(userDocRef, {
@@ -65,6 +84,10 @@ const CreateGroup = () => {
 
     const handleRouteHome = () => {
         navigate ('/home');
+    }
+
+    if (!userProfile) {
+        return <div className = "profile-container"> Loading User Profile...</div>;
     }
 
     if(groupCreated) {

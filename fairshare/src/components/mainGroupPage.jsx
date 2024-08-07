@@ -135,7 +135,9 @@ const MainGroupPage = () => {
                 {Expenses && Expenses.length > 0 ? (
                     <ul>
                         {Expenses.map((expense, index) => (
-                            <li key={index}>{expense.name} - Total Value: {expense.totalValue}</li>
+                            <li key={index} onClick={() => navigate(`/group/${groupName}/expenses/${expense.id}`)}>
+                                {expense.name} - Total Value: {expense.totalValue}
+                            </li>
                         ))}
                     </ul>
                 ) : (

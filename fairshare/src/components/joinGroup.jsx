@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
@@ -7,9 +7,27 @@ const JoinGroup = () => {
     const [groupName, setGroupName] = useState('');
     const [error, setError] = useState('');
     const [groupCode, setGroupCode] = useState('');
+    const [userProfile, setUserProfile] = useState(null);
     const navigate = useNavigate();
     const [groupPicUrl, setGroupPicUrl] = useState('https://upload.wikimedia.org/wikipedia/commons/8/84/Question_Mark_Icon.png');
     const defaultGroupImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/8/84/Question_Mark_Icon.png';
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const userDoc = doc(db, "Users", auth.currentUser.uid);
+            const userDocSnap = await getDoc(userDoc);
+
+            if (userDocSnap.exists()) {
+                setUserProfile(userDocSnap.data());
+            }
+        };
+
+        if (auth.currentUser) {
+            fetchUserProfile();
+        }
+
+        }, []
+    );
 
     const handleSubmit = async event => {
         event.preventDefault();
@@ -33,7 +51,8 @@ const JoinGroup = () => {
         }
     
         await updateDoc(groupDocRef, {
-            members: arrayUnion(auth.currentUser.uid)
+            members: arrayUnion(auth.currentUser.uid),
+            membersNames: arrayUnion(userProfile.name),
         });
         const userDocRef = doc(db, "Users", auth.currentUser.uid);
         await updateDoc(userDocRef, {

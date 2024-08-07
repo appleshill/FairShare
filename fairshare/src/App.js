@@ -14,6 +14,7 @@ import JoinGroup from './components/joinGroup';
 import MainGroupPage from './components/mainGroupPage';
 import CreateExpense from './components/createExpense';
 import GroupMembersView from './components/groupMembersView';
+import ViewExpense from './components/viewExpense';
 
 function App() {
   const [user] = useAuthState(auth);
@@ -34,6 +35,7 @@ function App() {
             <Route path="/group/:groupName" element={<MainGroupPage />} />
             <Route path="/group/:groupName/create-expense" element={<CreateExpense />} />
             <Route path="/group/:groupName/members" element={<GroupMembersView />} />
+            <Route path="/group/:groupName/expenses/:expenseId" element={<ViewExpense />} />
           </Routes>
       </div>
     </Router>

@@ -602,7 +602,7 @@ input[type="file"] {
 .home-icon-button {
   position: fixed;
   top: 30px;
-  left: 50px;
+  left: 30px;
   border: none;
   cursor: pointer;
   padding: 0px;
@@ -852,7 +852,7 @@ input[type="file"] {
   width: 90%; 
   padding: 10px;
   border-radius: 5px;
-  border: none;
+  border: 1px solid #555;
   background-color: #333; 
   color: white;
   outline: none; 
@@ -888,7 +888,7 @@ input[type="file"] {
   flex-direction: column;
   align-items: center; 
   justify-content: center; 
-  width: 100%; 
+  width: 80%; 
   overflow-y: auto; 
   padding: 20px;
 }
@@ -1003,17 +1003,17 @@ input[type="file"] {
 }
 
 .expense-details p {
-  color: #fff; /* Make sure the total value is visible against a dark background */
+  color: #fff;
   margin-bottom: 20px;
 }
 
 .participant-info {
   display: flex;
   align-items: center;
-  justify-content: space-evenly; /* This will evenly space the items across the container */
+  justify-content: space-evenly;
   width: 80%;
   padding: 10px;
-  margin: 10px auto; /* Ensure it is centered horizontally relative to its parent */
+  margin: 10px auto; 
   background-color: #333;
   border-radius: 8px;
 }
@@ -1028,12 +1028,12 @@ input[type="file"] {
 .participant-info p {
   font-size: 16px;
   color: #fff;
-  margin: 0 15px; /* This adds margin on both sides of the paragraph */
-  flex: 1; /* Flex property to allow the paragraph to expand */
+  margin: 0 15px; 
+  flex: 1; 
   text-align: center;
 }
 
-/* Handle smaller screens */
+
 @media (max-width: 600px) {
   .view-expense-container {
       width: 100%;
@@ -1046,5 +1046,59 @@ input[type="file"] {
   }
 }
 
+.share-cost-label, .share-cost-values {
+  display: inline-block;
+  vertical-align: middle;
+  width: 90%; 
+  padding: 10px;
+  /* border-radius: 5px;
+  border: none;
+  background-color: #333; 
+  color: white;
+  outline: none; */
+}
 
+.share-cost-label {
+  width: 50%;
+  text-align: left;
+  color: #fff; /* Assuming a light theme */
+  font-size: 16px;
+  padding: 10px 0; /* Adjust padding as needed */
+
+}
+
+.share-cost-values {
+  width: 50%;
+  text-align: right;
+  padding: 10px 10px 10px 0; 
+}
+
+.form-group {
+  margin: 10px 0;
+  background-color: #333; /* Dark theme background */
+  border-radius: 8px;
+  padding: 15px; /* Padding around the container */
+  box-sizing: border-box;
+}
+
+.form-group input[type="number"] {
+  background-color: #444; 
+  border: 1px solid #555; 
+  color: #fff; 
+  border-radius: 4px; 
+  padding: 8px; 
+  width: calc(100% - 20px); 
+  box-sizing: border-box; 
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+  text-align: left; /* Align text to the left */
+}
 

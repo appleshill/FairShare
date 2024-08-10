@@ -4,7 +4,7 @@ import { doc, setDoc, serverTimestamp, collection, getDoc } from 'firebase/fires
 import { auth, db } from '../firebase';
 
 const ViewExpense = () => {
-    const { groupName, expenseId } = useParams(); // Assuming URL param names
+    const { groupName, expenseId } = useParams(); 
     const [expense, setExpense] = useState(null);
     const [groupInfo, setGroupInfo] = useState(null);
     const [participants, setParticipants] = useState([]);
@@ -12,6 +12,10 @@ const ViewExpense = () => {
 
     const goHome = () => {
         navigate('/home');
+    }
+
+    const goEdit = () => {
+        navigate(`/group/${groupName}/edit-expense/${expenseId}`);
     }
 
     useEffect(() => {
@@ -22,7 +26,6 @@ const ViewExpense = () => {
                 console.log("Group not found");
                 return;
             }
-
             setGroupInfo(groupSnap.data());
 
             const expenseRef = doc(db, "Groups", groupName, "Expenses", expenseId);
@@ -41,9 +44,14 @@ const ViewExpense = () => {
                 const userRef = doc(db, "Users", memberId);
                 const userSnap = await getDoc(userRef);
 
-                const paid = memberName === expenseData.paidBy ? expenseData.totalValue : 0;
-                const individualShare = expenseData.amountsConsumed[index];
-                const owes = Math.max(individualShare - paid, 0);
+                let paid = memberName === expenseData.paidBy ? expenseData.totalValue : expenseData.paymentShares[index];
+                let individualShare = expenseData.amountsConsumed[index];
+                let owes = Math.max(individualShare - paid, 0);
+
+                if (expenseData.splitMethod === 'percentage') {
+                    individualShare = (expenseData.memberPercentages[index] / 100 * expenseData.totalValue).toFixed(2);
+                    owes = Math.max(individualShare - paid, 0);
+                }
 
                 return {
                     name: memberName,
@@ -56,23 +64,10 @@ const ViewExpense = () => {
             setParticipants(participantDetails);
         };
 
-        
-
-        const fetchGroupInfo = async () => {
-            if (!groupName) return;
-            const groupRef = doc(db, "Groups", groupName);
-            const groupSnap = await getDoc(groupRef);
-            if (groupSnap.exists()) {
-                setGroupInfo(groupSnap.data());
-            } else {
-                console.log("Group not found");
-            }
-        };
-
         fetchGroupAndExpenseDetails();
-        fetchGroupInfo();
     }, [groupName, expenseId]);
 
+        
     return (
         <div className="view-expense-container">
             <div className="header-container">
@@ -81,7 +76,7 @@ const ViewExpense = () => {
                             <img src="/home.svg" alt="Home-button" className="home-icon-button" />
                         </button>
                     <div className="expense-edit-delete">
-                        <button onClick={() => console.log('Edit')}><img src="/edit.svg" alt="Edit" className="edit-button"/></button>
+                        <button onClick={goEdit}><img src="/edit.svg" alt="Edit" className="edit-button"/></button>
                         <button onClick={() => console.log('Delete')}><img src="/delete.svg" alt="Delete" className="delete-button"/></button>
                     </div>
                 </div>
@@ -94,7 +89,7 @@ const ViewExpense = () => {
                 <h2>{expense?.name || 'Loading...'}</h2>
                 <h3>Total Value: ${expense?.totalValue}</h3>
                 {participants.map((participant, index) => (
-                    <div key={index} className="participant-info">
+                    <div key={index} className="members-list">
                         <img src={participant.profilePicture} alt={participant.name} className="participant-profile-image"/>
                         {participant.paid > 0 && <p>{participant.name} paid ${participant.paid}</p>}
                         {participant.owes > 0 && <p>{participant.name} owes ${participant.owes}</p>}

@@ -10,6 +10,12 @@ const CreateExpense = () => {
     const [notes, setNotes] = useState('');
     const [members, setMembers] = useState([]); // To store members' names
     const [userProfile, setUserProfile] = useState(null);
+    const [paidByMultiple, setPaidByMultiple] = useState(false);
+    const [paymentShares, setPaymentShares] = useState([]);
+    const [splitMethod, setSplitMethod] = useState('equally');
+    const [memberSplits, setMemberSplits] = useState([]);
+    const [memberPercentages, setMemberPercentages] = useState([]);
+    const [arraysFilled, setArraysFilled] = useState(false);
     const [profileExpanded, setProfileExpanded] = useState(false);
     const navigate = useNavigate();
 
@@ -20,7 +26,7 @@ const CreateExpense = () => {
     const signOut = async() => {
         try {
             await auth.signOut(); 
-            console.log('User signed out successfully');
+            // console.log('User signed out successfully');
             navigate('/frontPage');
         } catch (error) {
             console.error('Sign Out Error:', error);
@@ -44,7 +50,10 @@ const CreateExpense = () => {
 
             if (docSnap.exists()) {
                 const groupData = docSnap.data();
-                setMembers(groupData.membersNames || []); // Assuming membersNames is the field
+                setMembers(groupData.membersNames || []);
+                setPaymentShares(new Array(groupData.membersNames.length).fill(0));
+                initializeSplits(groupData.membersNames.length);
+                // console.log(members);
             } else {
                 console.log('No such group!');
             }
@@ -59,24 +68,108 @@ const CreateExpense = () => {
                 setUserProfile(docSnap.data());
             }
         };
+        if (!arraysFilled) {
+            fetchGroupDetails();
+            fetchUserProfile();
+            setArraysFilled(true);
+        }
         
-        fetchGroupDetails();
-        fetchUserProfile();
-        
-    }, [groupName]);
+    }, [groupName, members, memberSplits, memberPercentages, arraysFilled]);
+
+    // who paid
+    const handlePaidByChange = (e) => {
+        if (e.target.value === "Multiple People") {
+            setPaidByMultiple(true);
+        } else {
+            setPaidByMultiple(false);
+        }
+    };
+
+    const handlePaymentChange = (index, value) => {
+        let newShares = [...paymentShares];
+        newShares[index] = value;
+        setPaymentShares(newShares);
+    };
+
+    // who consumed
+    const initializeSplits = (memberCount) => {
+        setMemberSplits(new Array(memberCount).fill(0));
+        setMemberPercentages(new Array(memberCount).fill(0));
+    };
+
+    const updateSplitsEqually = (memberCount, totalCost) => {
+        setMemberSplits(new Array(memberCount).fill((totalCost / memberCount).toFixed(2)));
+    };
+
+    const handleSplitMethodChange = (e) => {
+        setSplitMethod(e.target.value);
+    };
+
+    const handleSplitChange = (index, value) => {
+        const numericValue = parseFloat(value); // Convert input string to a float
+        if (splitMethod === 'percentage') {
+            let newPercentages = [...memberPercentages];
+            newPercentages[index] = numericValue;
+            setMemberPercentages(newPercentages);
+            // console.log("Member Percentages is:" + memberPercentages);
+        } else if (splitMethod === 'absolute') {
+            let newSplits = [...memberSplits];
+            newSplits[index] = numericValue;
+            setMemberSplits(newSplits);
+            // console.log("Member splits are:" + memberSplits);
+        }
+    };
+    
+    const convertPercentagesToAmounts = (percentages, totalCost) => {
+        return percentages.map(percentage => parseFloat((percentage / 100 * totalCost).toFixed(2)));
+    };
+    
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        let currentMemberSplits = memberSplits;
+
+        if (paidByMultiple) {
+            const totalPaid = paymentShares.reduce((acc, current) => acc + Number(current), 0);
+            const diff = 0.1;
+            if (Math.abs(totalPaid - Number(cost)) > diff) {
+                alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
+                return; 
+            }
+        }
+        if (splitMethod === 'absolute') {
+            const totalPaid = memberSplits.reduce((acc, current) => acc + parseFloat(current), 0);
+            if (Math.abs(totalPaid - parseFloat(cost)) > 0.01) {
+                alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
+                return;
+            }
+        }
+
+        if (splitMethod === 'percentage') {
+            currentMemberSplits = convertPercentagesToAmounts(memberPercentages, cost);
+            /* const totalPercent = memberSplits.reduce((acc, current) => acc + parseFloat(current), 0);
+            if (Math.abs(100 - totalPercent) > 0.01) {
+                alert(`The total percentage of ${memberPercentages} do not match the total value of ${100}%. Please adjust the amounts.`);
+                return;
+            } */
+            // console.log("Member splits on submission are: ", currentMemberSplits);
+        } else if (splitMethod === 'equally') {
+            currentMemberSplits = new Array(members.length).fill((cost / members.length).toFixed(2));
+        }
+
         const expenseRef = doc(collection(db, "Groups", groupName, "Expenses"));
         const expenseData = {
             name: title,
             totalValue: Number(cost),
             notes,
             createdAt: serverTimestamp(),
-            paidBy: members.length > 0 ? members[0] : "Unknown", // Default to first member
-            splitEqual: true,
-            consumedBy: members, // All members by default
-            amountsConsumed: members.map(() => cost / members.length) // Split equally
+            paidBy: paidByMultiple ? "Multiple" : members[0],
+            paymentShares: paidByMultiple ? paymentShares : [],
+            memberPercentages,
+            splitMethod,
+            amountsConsumed: currentMemberSplits,
+            consumedBy: members, 
         };
 
         if (!title || !cost) {
@@ -93,6 +186,7 @@ const CreateExpense = () => {
             alert('Error adding expense!');
         }
     };
+
 
     if (!userProfile) {
         return <div className = "profile-container"> Loading User Profile...</div>;
@@ -133,18 +227,32 @@ const CreateExpense = () => {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Paid by</label>
-                    <select className="form-select" onChange={(e) => console.log(e.target.value)}>
+                    <select className="form-select" onChange={handlePaidByChange}>
                         {members.map((member, index) => (
                             <option key={index} value={member}>{member}</option>
                         ))}
+                        <option value="Multiple People">Multiple People</option>
                     </select>
+                    {paidByMultiple && members.map((member, index) => (
+                        <div key={index}>
+                            <label className="share-cost-label">{member} paid:</label>
+                            <input className="share-cost-values" type="number" value={paymentShares[index]} onChange={(e) => handlePaymentChange(index, e.target.value)} />
+                        </div>
+                    ))}
                 </div>
                 <div className="form-group">
                     <label className="form-label">Split</label>
-                    <select className="form-select">
-                        <option value="equal">Equally</option>
-                        {/* Additional split options can be added here */}
+                    <select className="form-select" value={splitMethod} onChange={handleSplitMethodChange}>
+                        <option value="equally">Equally</option>
+                        <option value="percentage">Split by Percentage</option>
+                        <option value="value">Split by Value</option>
                     </select>
+                    {splitMethod !== 'equally' && members.map((member, index) => (
+                    <div key={index}>
+                        <label className="share-cost-label">{member} consumed:</label>
+                            <input className="share-cost-values" type="number" onChange={e => handleSplitChange(index, e.target.value)} />
+                    </div>
+                    ))}
                 </div>
                 <button type="submit" className="form-submit-button">Done</button>
             </form>

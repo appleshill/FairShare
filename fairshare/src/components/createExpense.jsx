@@ -26,7 +26,7 @@ const CreateExpense = () => {
     const signOut = async() => {
         try {
             await auth.signOut(); 
-            // console.log('User signed out successfully');
+
             navigate('/frontPage');
         } catch (error) {
             console.error('Sign Out Error:', error);
@@ -41,7 +41,7 @@ const CreateExpense = () => {
         navigate('/home');
     }
 
-    // Fetch group details including members
+
     useEffect(() => {
         const fetchGroupDetails = async () => {
             if (!groupName) return;
@@ -106,17 +106,17 @@ const CreateExpense = () => {
     };
 
     const handleSplitChange = (index, value) => {
-        const numericValue = parseFloat(value); // Convert input string to a float
+        const numericValue = parseFloat(value); 
         if (splitMethod === 'percentage') {
             let newPercentages = [...memberPercentages];
             newPercentages[index] = numericValue;
             setMemberPercentages(newPercentages);
-            // console.log("Member Percentages is:" + memberPercentages);
+
         } else if (splitMethod === 'absolute') {
             let newSplits = [...memberSplits];
             newSplits[index] = numericValue;
             setMemberSplits(newSplits);
-            // console.log("Member splits are:" + memberSplits);
+
         }
     };
     
@@ -148,12 +148,6 @@ const CreateExpense = () => {
 
         if (splitMethod === 'percentage') {
             currentMemberSplits = convertPercentagesToAmounts(memberPercentages, cost);
-            /* const totalPercent = memberSplits.reduce((acc, current) => acc + parseFloat(current), 0);
-            if (Math.abs(100 - totalPercent) > 0.01) {
-                alert(`The total percentage of ${memberPercentages} do not match the total value of ${100}%. Please adjust the amounts.`);
-                return;
-            } */
-            // console.log("Member splits on submission are: ", currentMemberSplits);
         } else if (splitMethod === 'equally') {
             currentMemberSplits = new Array(members.length).fill((cost / members.length).toFixed(2));
         }

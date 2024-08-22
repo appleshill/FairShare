@@ -46,32 +46,33 @@ const ViewTotals = () => {
                 totalConsumed: 0,
                 memberTotals: {}
             };
-
+    
             querySnapshot.forEach((doc) => {
                 const expense = doc.data();
                 const { totalValue, paymentShares, amountsConsumed, consumedBy, paidBy } = expense;
-
-                let paidByMultiple = false; 
-
-                if (paidBy === "Multiple") {
-                    paidByMultiple = true;
-                }
+    
                 // Calculate total consumed
                 totals.totalConsumed += Number(totalValue);
-
+    
                 // Handle payments
-                if (paidByMultiple) {
+                if (paidBy === "Multiple") {
                     paymentShares.forEach((amount, index) => {
                         const member = consumedBy[index];
-                        totals.memberTotals[member] = totals.memberTotals[member] || { paid: 0, consumed: 0 };
-                        totals.memberTotals[member].paid += Number(amount);
-                        totals.totalPaid += Number(amount);
+                        if (member) { // Ensure member exists
+                            if (!totals.memberTotals[member]) {
+                                totals.memberTotals[member] = { paid: 0, consumed: 0 };
+                            }
+                            totals.memberTotals[member].paid += Number(amount);
+                            totals.totalPaid += Number(amount);
+                        }
                     });
                 } else {
-                    totals.memberTotals[paidBy] = totals.memberTotals[paidBy] || { paid: 0, consumed: 0 };
+                    if (!totals.memberTotals[paidBy]) {
+                        totals.memberTotals[paidBy] = { paid: 0, consumed: 0 };
+                    }
                     totals.memberTotals[paidBy].paid += Number(totalValue);
                     totals.totalPaid += Number(totalValue);
-                }
+                }    
 
                 // Handle consumption
                 amountsConsumed.forEach((amount, index) => {

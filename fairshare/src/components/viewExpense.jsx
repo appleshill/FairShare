@@ -24,7 +24,7 @@ const ViewExpense = () => {
         try {
             await deleteDoc(expenseRef);
             console.log('Expense deleted successfully');
-            navigate(`/group/${groupName}`);  // Adjust this route as needed to go back to the group or expense list
+            navigate(`/group/${groupName}`);  
         } catch (error) {
             console.error("Error deleting expense: ", error);
         }

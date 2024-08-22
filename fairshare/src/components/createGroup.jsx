@@ -67,6 +67,8 @@ const CreateGroup = () => {
             members: [auth.currentUser.uid], 
             groupCode: generatedCode, 
             membersNames: [userProfile.name],
+            simplifyDebts: true,
+            currencyConversion: false,
         });
         const userDocRef = doc(db, "Users", auth.currentUser.uid);
         await updateDoc(userDocRef, {

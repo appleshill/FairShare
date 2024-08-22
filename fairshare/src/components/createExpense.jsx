@@ -112,7 +112,7 @@ const CreateExpense = () => {
             newPercentages[index] = numericValue;
             setMemberPercentages(newPercentages);
 
-        } else if (splitMethod === 'absolute') {
+        } else if (splitMethod === 'value') {
             let newSplits = [...memberSplits];
             newSplits[index] = numericValue;
             setMemberSplits(newSplits);
@@ -138,7 +138,7 @@ const CreateExpense = () => {
                 return; 
             }
         }
-        if (splitMethod === 'absolute') {
+        if (splitMethod === 'value') {
             const totalPaid = memberSplits.reduce((acc, current) => acc + parseFloat(current), 0);
             if (Math.abs(totalPaid - parseFloat(cost)) > 0.01) {
                 alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);

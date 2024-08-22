@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { doc, setDoc, serverTimestamp, collection, getDoc } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp, collection, getDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 const ViewExpense = () => {
@@ -17,6 +17,18 @@ const ViewExpense = () => {
     const goEdit = () => {
         navigate(`/group/${groupName}/edit-expense/${expenseId}`);
     }
+
+    const handleDeleteExpense = async () => {
+        const expenseRef = doc(db, "Groups", groupName, "Expenses", expenseId);
+    
+        try {
+            await deleteDoc(expenseRef);
+            console.log('Expense deleted successfully');
+            navigate(`/group/${groupName}`);  // Adjust this route as needed to go back to the group or expense list
+        } catch (error) {
+            console.error("Error deleting expense: ", error);
+        }
+    };
 
     useEffect(() => {
         const fetchGroupAndExpenseDetails = async () => {
@@ -82,7 +94,7 @@ const ViewExpense = () => {
                         <button onClick={goEdit}>
                             <img src="https://firebasestorage.googleapis.com/v0/b/fairshare-afe2a.appspot.com/o/edit.svg?alt=media&token=2a4e5f9c-cb58-499a-a9ad-b97a0a3662c6" alt="Edit" className="edit-button"/>
                         </button>
-                        <button onClick={() => console.log('Delete')}>
+                        <button onClick={handleDeleteExpense}>
                             <img src="https://firebasestorage.googleapis.com/v0/b/fairshare-afe2a.appspot.com/o/delete.svg?alt=media&token=cb020acc-4960-4663-aadf-1882b5df0ce2" alt="Delete" className="delete-button"/>
                         </button>
                     </div>
@@ -108,7 +120,5 @@ const ViewExpense = () => {
         </div>
     );
 };
-
-
 
 export default ViewExpense;

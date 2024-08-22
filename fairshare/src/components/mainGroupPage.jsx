@@ -82,13 +82,11 @@ const MainGroupPage = () => {
     }
 
     const totals = () => {
-        //change this when available
-        console.log('Totatls button pressed');
+        navigate(`/group/${groupName}/view-totals`);
     }
 
     const settings = () => {
-        // change this when available
-        console.log('Settings button pressed');
+        navigate(`/group/${groupName}/group-settings`);
     }
 
     //expenses

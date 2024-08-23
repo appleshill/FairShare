@@ -77,8 +77,7 @@ const MainGroupPage = () => {
     //buttons
 
     const balances = () => {
-        //change this when available
-        console.log('Balance button pressed');
+        navigate(`/group/${groupName}/balances`);
     }
 
     const totals = () => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import SettleDebt from './settleDebt';
 
 const EditExpense = () => {
     const { groupName, expenseId } = useParams();
@@ -18,6 +19,8 @@ const EditExpense = () => {
     const [paidBy, setPaidBy] = useState('');
     const [profileExpanded, setProfileExpanded] = useState(false);
     const [arraysFilled, setArraysFilled] = useState(false);
+    const [selectedPayer, setSelectedPayer] = useState('');
+    const [totalCostChanged, setTotalCostChanged] = useState(false);
     const navigate = useNavigate();
 
 
@@ -51,9 +54,12 @@ const EditExpense = () => {
             if (expenseSnap.exists()) {
                 const expenseData = expenseSnap.data();
                 setTitle(expenseData.name);
-                setCost(expenseData.totalValue);
+                setCost(expenseData.totalValue.toString()); 
                 setNotes(expenseData.notes);
                 setPaidByMultiple(expenseData.paidBy === "Multiple");
+                if (expenseData.paidBy !== "Multiple") {
+                    setSelectedPayer(expenseData.paidBy);
+                }
                 setPaidBy(expenseData.paidBy); 
                 setPaymentShares(expenseData.paymentShares || []);
                 setMemberSplits(expenseData.amountsConsumed);
@@ -65,7 +71,6 @@ const EditExpense = () => {
                 console.log('No such expense!');
             }
         };
-    
 
         const fetchUserProfile = async () => {
             if (!auth.currentUser) return;
@@ -111,6 +116,18 @@ const EditExpense = () => {
         newShares[index] = Number(value);
         setPaymentShares(newShares);
     };
+
+    const handlePaidByChange = (e) => {
+        const selectedValue = e.target.value;
+        if (selectedValue === "Multiple People") {
+            setPaidByMultiple(true);
+            setSelectedPayer(''); 
+        } else {
+            setPaidByMultiple(false);
+            setSelectedPayer(selectedValue); 
+        }
+    };
+
     const handleSplitChange = (index, value) => {
         const numericValue = parseFloat(value);
         if (splitMethod === 'percentage') {
@@ -124,38 +141,63 @@ const EditExpense = () => {
         }
     };
 
+    const updateTotalCost = (value) => {
+        setCost(value);
+        setTotalCostChanged(true);
+    }
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         let currentMemberSplits = memberSplits;
 
-        if (paidByMultiple) {
-            const totalPaid = paymentShares.reduce((acc, current) => acc + current, 0);
-            if (Math.abs(totalPaid - Number(cost)) > 0.01) {
-                alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
-                return;
+        if (totalCostChanged) {
+            if (paidByMultiple) {
+                const totalPaid = paymentShares.reduce((acc, current) => acc + Number(current), 0);
+                if (Math.abs(totalPaid - Number(cost)) > 0.1) {
+                    alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
+                    return;
+                }
+            } else {
+                setPaymentShares(new Array(members.length).fill(0));
+                const payerIndex = members.indexOf(selectedPayer); 
+                paymentShares[payerIndex] = parseFloat(cost); 
+                console.log(paymentShares);
             }
         }
+
         if (splitMethod === 'absolute') {
             const totalPaid = memberSplits.reduce((acc, current) => acc + current, 0);
             if (Math.abs(totalPaid - parseFloat(cost)) > 0.01) {
                 alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
                 return;
             }
-        }
-        if (splitMethod === 'percentage') {
+        } else if (splitMethod === 'percentage') {
             currentMemberSplits = memberPercentages.map(percentage => parseFloat((percentage / 100 * cost).toFixed(2)));
+        } else if (splitMethod === 'equally') {
+            currentMemberSplits = new Array(members.length).fill((cost / members.length).toFixed(2));
         }
+
+        const netAmounts = {};
+        members.forEach((member, index) => {
+            const paid = parseFloat(paymentShares[index] || 0);  
+            const consumed = parseFloat(currentMemberSplits[index] || 0);  
+            console.log(member + " paid: " + paid + "consumed " + consumed);
+            netAmounts[member] = paid - consumed;
+        });
+        const simplifiedTransactions = SettleDebt(netAmounts);
 
         const updatedExpenseData = {
             name: title,
             totalValue: Number(cost),
             notes,
-            paidBy: paidByMultiple ? "Multiple" : members[0],
-            paymentShares: paidByMultiple ? paymentShares : [],
+            paidBy: paidByMultiple ? "Multiple" : paidBy,
+            paymentShares: paymentShares,
             memberPercentages: splitMethod === 'percentage' ? memberPercentages : [],
             splitMethod,
             amountsConsumed: currentMemberSplits,
             consumedBy: members,
+            netAmounts: netAmounts,
+            Debts: simplifiedTransactions,
         };
 
         try {
@@ -199,7 +241,7 @@ const EditExpense = () => {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Cost</label>
-                    <input type="number" className="form-input" value={cost} onChange={(e) => setCost(e.target.value)} step="0.01" />
+                    <input type="number" className="form-input" value={cost} onChange={(e) => updateTotalCost(e.target.value)} step="0.01" />
                 </div>
                 <div className="form-group">
                     <label className="form-label">Notes</label>
@@ -207,7 +249,7 @@ const EditExpense = () => {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Paid by</label>
-                    <select className="form-select" value={paidByMultiple ? "Multiple People" : paidBy} onChange={(e) => setPaidByMultiple(e.target.value === "Multiple People")}>
+                    <select className="form-select" value={paidByMultiple ? "Multiple People" : paidBy} onChange={handlePaidByChange}>
                         {members.map((member, index) => (
                             <option key={index} value={member}>{member}</option>
                         ))}

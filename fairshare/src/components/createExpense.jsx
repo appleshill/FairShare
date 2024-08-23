@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { doc, setDoc, serverTimestamp, collection, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import SettleDebt from './settleDebt';
 
 const CreateExpense = () => {
     const { groupName } = useParams();
     const [title, setTitle] = useState('');
     const [cost, setCost] = useState('');
     const [notes, setNotes] = useState('');
-    const [members, setMembers] = useState([]); // To store members' names
+    const [members, setMembers] = useState([]); 
     const [userProfile, setUserProfile] = useState(null);
     const [paidByMultiple, setPaidByMultiple] = useState(false);
     const [paymentShares, setPaymentShares] = useState([]);
@@ -17,6 +18,7 @@ const CreateExpense = () => {
     const [memberPercentages, setMemberPercentages] = useState([]);
     const [arraysFilled, setArraysFilled] = useState(false);
     const [profileExpanded, setProfileExpanded] = useState(false);
+    const [selectedPayer, setSelectedPayer] = useState('');
     const navigate = useNavigate();
 
     const editProfile = () => {
@@ -53,6 +55,9 @@ const CreateExpense = () => {
                 setMembers(groupData.membersNames || []);
                 setPaymentShares(new Array(groupData.membersNames.length).fill(0));
                 initializeSplits(groupData.membersNames.length);
+                if (groupData.membersNames.length > 0) {
+                    setSelectedPayer(groupData.membersNames[0]);
+                }
                 // console.log(members);
             } else {
                 console.log('No such group!');
@@ -78,12 +83,16 @@ const CreateExpense = () => {
 
     // who paid
     const handlePaidByChange = (e) => {
-        if (e.target.value === "Multiple People") {
+        console.log("HandlePaidByChange");
+        const selectedValue = e.target.value;
+        if (selectedValue === "Multiple People") {
             setPaidByMultiple(true);
+            setSelectedPayer(''); 
         } else {
             setPaidByMultiple(false);
+            setSelectedPayer(selectedValue); 
         }
-    };
+    };    
 
     const handlePaymentChange = (index, value) => {
         let newShares = [...paymentShares];
@@ -95,10 +104,6 @@ const CreateExpense = () => {
     const initializeSplits = (memberCount) => {
         setMemberSplits(new Array(memberCount).fill(0));
         setMemberPercentages(new Array(memberCount).fill(0));
-    };
-
-    const updateSplitsEqually = (memberCount, totalCost) => {
-        setMemberSplits(new Array(memberCount).fill((totalCost / memberCount).toFixed(2)));
     };
 
     const handleSplitMethodChange = (e) => {
@@ -124,33 +129,52 @@ const CreateExpense = () => {
         return percentages.map(percentage => parseFloat((percentage / 100 * totalCost).toFixed(2)));
     };
     
-
-
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         let currentMemberSplits = memberSplits;
 
+        let updatedPaymentShares = [...paymentShares];
+
+        if (splitMethod === 'percentage') {
+            const totalPercentage = memberPercentages.reduce((acc, current) => acc + parseFloat(current), 0);
+            if (Math.abs(totalPercentage - 100) > 0.01) {
+                alert(`The total percentage of ${totalPercentage.toFixed(2)}% does not add up to 100%. Please adjust the percentages.`);
+                return;
+            }
+            currentMemberSplits = convertPercentagesToAmounts(memberPercentages, cost);
+        }
+    
         if (paidByMultiple) {
             const totalPaid = paymentShares.reduce((acc, current) => acc + Number(current), 0);
-            const diff = 0.1;
-            if (Math.abs(totalPaid - Number(cost)) > diff) {
+            if (Math.abs(totalPaid - Number(cost)) > 0.1) {
                 alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
-                return; 
+                return;
             }
+        } else {
+            const payerIndex = members.indexOf(selectedPayer);
+            updatedPaymentShares = new Array(members.length).fill(0);
+            updatedPaymentShares[payerIndex] = parseFloat(cost);
         }
+
         if (splitMethod === 'value') {
-            const totalPaid = memberSplits.reduce((acc, current) => acc + parseFloat(current), 0);
+            const totalPaid = currentMemberSplits.reduce((acc, current) => acc + parseFloat(current), 0);
             if (Math.abs(totalPaid - parseFloat(cost)) > 0.01) {
                 alert(`The total payments of $${totalPaid.toFixed(2)} do not match the total cost of $${cost}. Please adjust the amounts.`);
                 return;
             }
         }
-
-        if (splitMethod === 'percentage') {
-            currentMemberSplits = convertPercentagesToAmounts(memberPercentages, cost);
-        } else if (splitMethod === 'equally') {
+        if (splitMethod === 'equally') {
             currentMemberSplits = new Array(members.length).fill((cost / members.length).toFixed(2));
         }
+        const netAmounts = {};
+        members.forEach((member, index) => {
+            const paid = parseFloat(updatedPaymentShares[index] || 0);  
+            const consumed = parseFloat(currentMemberSplits[index] || 0);  
+            console.log(member + " paid: " + paid + "consumed " + consumed);
+            netAmounts[member] = paid - consumed;
+        });
+        const simplifiedTransactions = SettleDebt(netAmounts);
 
         const expenseRef = doc(collection(db, "Groups", groupName, "Expenses"));
         const expenseData = {
@@ -158,13 +182,16 @@ const CreateExpense = () => {
             totalValue: Number(cost),
             notes,
             createdAt: serverTimestamp(),
-            paidBy: paidByMultiple ? "Multiple" : members[0],
-            paymentShares: paidByMultiple ? paymentShares : [],
-            memberPercentages,
+            paidBy: paidByMultiple ? "Multiple" : selectedPayer,
+            paymentShares: updatedPaymentShares,
+            memberPercentages: splitMethod === 'percentage' ? memberPercentages : [],
             splitMethod,
             amountsConsumed: currentMemberSplits,
-            consumedBy: members, 
+            consumedBy: members,
+            netAmounts: netAmounts,
+            Debts: simplifiedTransactions,
         };
+    
 
         if (!title || !cost) {
             alert("Please enter a valid name or cost");
@@ -177,6 +204,7 @@ const CreateExpense = () => {
             navigate(`/group/${groupName}`);
         } catch (error) {
             console.error("Error adding document: ", error);
+            console.log(selectedPayer);
             alert('Error adding expense!');
         }
     };
@@ -221,7 +249,7 @@ const CreateExpense = () => {
                 </div>
                 <div className="form-group">
                     <label className="form-label">Paid by</label>
-                    <select className="form-select" onChange={handlePaidByChange}>
+                    <select className="form-select" value={selectedPayer} onChange={handlePaidByChange}>
                         {members.map((member, index) => (
                             <option key={index} value={member}>{member}</option>
                         ))}
